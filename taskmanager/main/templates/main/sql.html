@@ -5,17 +5,17 @@ Main page
 {% endblock %}
 
 {% block content %}
-    <h1>Tables</h1>
-<table border="1">
+    <h1>SQL</h1>
+    <table border="1">
         <tr>
-            <td>Код</td>
-            <td>ФИО</td>
-            <td>Должность</td>
-            <td>Дата найма</td>
-            <td>Адресс</td>
-            <td>Телефон</td>
+            <td>code</td>
+            <td>FIO</td>
+            <td>post</td>
+            <td>date</td>
+            <td>address</td>
+            <td>telefone</td>
         </tr>
-        {% for datadisplay in employees %}
+        {% for datadisplay in Employees %}
         <tr>
             <td>{{ datadisplay.code }}</td>
             <td>{{ datadisplay.FIO }}</td>
