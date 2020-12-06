@@ -6,90 +6,41 @@ Main page
 
 {% block content %}
     <h1>Tables</h1>
+    <h2>Employees</h2>
     <table class="table table-bordered table-dark">
         <tr>
-            <td>Код</td>
             <td>ФИО</td>
             <td>Должность</td>
-            <td>Дата найма</td>
-            <td>Адресс</td>
             <td>Телефон</td>
         </tr>
         {% for el in employees %}
         <tr>
-            <td>{{ el.code }}</td>
             <td>{{ el.FIO }}</td>
             <td>{{ el.post }}</td>
-            <td>{{ el.dateOfEmployment }}</td>
-            <td>{{ el.address }}</td>
             <td>{{ el.tel }}</td>
         </tr>
         {% endfor %}
     </table>
+    <h2>Selled poroperties</h2>
     <table class="table table-bordered table-dark">
         <tr>
-            <td>Код</td>
-            <td>ФИО</td>
-            <td>Адресс</td>
-            <td>Телефон</td>
-            <td>Код поспорта</td>
-            <td>Индентификационный номер</td>
-        </tr>
-        {% for el in clientBuy %}
-        <tr>
-            <td>{{ el.code }}</td>
-            <td>{{ el.FIO }}</td>
-            <td>{{ el.address }}</td>
-            <td>{{ el.tel }}</td>
-            <td>{{ el.passportCode }}</td>
-            <td>{{ el.passportNumber }}</td>
-        </tr>
-        {% endfor %}
-    </table>
-    <table class="table table-bordered table-dark">
-        <tr>
-            <td>Код</td>
-            <td>ФИО</td>
-            <td>Адресс</td>
-            <td>Телефон</td>
-            <td>Код поспорта</td>
-            <td>Индентификационный номер</td>
-        </tr>
-        {% for el in сlientSell %}
-        <tr>
-            <td>{{ el.code }}</td>
-            <td>{{ el.FIO }}</td>
-            <td>{{ el.address }}</td>
-            <td>{{ el.tel }}</td>
-            <td>{{ el.passportCode }}</td>
-            <td>{{ el.passportNumber }}</td>
-        </tr>
-        {% endfor %}
-    </table>
-    <table class="table table-bordered table-dark">
-        <tr>
-            <td>Код заявки</td>
             <td>Дата составления заказа</td>
             <td>Наименование объекта</td>
             <td>Площадь м2</td>
             <td>Кол-во комнат</td>
             <td>Улица</td>
             <td>Цена</td>
-            <td>Продавец</td>
         </tr>
         {% for el in property %}
         <tr>
-            <td>{{ el.applicationCode }}</td>
             <td>{{ el.dateOfOrder }}</td>
             <td>{{ el.name }}</td>
             <td>{{ el.area }}</td>
             <td>{{ el.rooms }}</td>
             <td>{{ el.street }}</td>
             <td>{{ el.price }}</td>
-            <td>{{ el.seller }}</td>
         </tr>
         {% endfor %}
     </table>
-
 
 {% endblock %}

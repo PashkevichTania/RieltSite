@@ -23,7 +23,7 @@ class ClientBuy(models.Model):
     FIO = models.CharField(verbose_name='ФИО', max_length=50)
     address = models.CharField(verbose_name='Адресс', max_length=50)
     tel = models.IntegerField(verbose_name='Телефон')
-    passportCode = models.CharField(verbose_name='Код поспорта', help_text='7 символов', max_length=7)
+    passportCode = models.CharField(verbose_name='Код поспорта', help_text='2 буквы и 7 цифр', max_length=9)
     passportNumber = models.CharField(verbose_name='Индентификационный номер', help_text='14 символов', max_length=14)
 
     def __str__(self):
@@ -39,7 +39,7 @@ class ClientSell(models.Model):
     FIO = models.CharField(verbose_name='ФИО', max_length=50)
     address = models.CharField(verbose_name='Адресс', max_length=50)
     tel = models.IntegerField(verbose_name='Телефон')
-    passportCode = models.CharField(verbose_name='Код поспорта', help_text='7 символов', max_length=7)
+    passportCode = models.CharField(verbose_name='Код поспорта', help_text='2 буквы и 7 цифр', max_length=9)
     passportNumber = models.CharField(verbose_name='Индентификационный номер', help_text='14 символов', max_length=14)
 
     def __str__(self):
@@ -66,7 +66,7 @@ class Property(models.Model):
     )
 
     def __str__(self):
-        return self.name
+        return '%s (%s)' % (self.name, self.applicationCode)
 
     class Meta:
         verbose_name = 'Недвижимость'
@@ -74,9 +74,13 @@ class Property(models.Model):
 
 
 class SelledProperty(models.Model):
-    applicationCode = models.UUIDField(default=uuid.uuid4, verbose_name='Код заявки', primary_key=True)
-    dateOfOrder = models.DateField(verbose_name='Дата составления заказа')
-    name = models.CharField(verbose_name='Наименование объекта', max_length=50)
+    contractCode = models.UUIDField(default=uuid.uuid4, verbose_name='Код договора', primary_key=True)
+    applicationCode = models.ForeignKey(
+        Property,
+        verbose_name='Код заявки',
+        on_delete=models.CASCADE,
+        null=True
+    )
     employee = models.ForeignKey(
         Employees,
         verbose_name='Сотрудник',
@@ -95,13 +99,12 @@ class SelledProperty(models.Model):
         on_delete=models.CASCADE,
         null=True
     )
-    street = models.CharField(verbose_name='Улица', max_length=50)
-    price = models.IntegerField(verbose_name='Цена')
     dateOfOperation = models.DateField(verbose_name='Дата операции')
     profit = models.IntegerField(verbose_name='Прибыль')
 
     def __str__(self):
-        return self.name
+        a = self.contractCode
+        return str(a)
 
     class Meta:
         verbose_name = 'Проданный объект'
