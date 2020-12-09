@@ -1,5 +1,18 @@
 from django.db import models
 import uuid
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+
+class IntegerRangeField(models.IntegerField):
+    def __init__(self, verbose_name=None, name=None, min_value=None, max_value=None, **kwargs):
+        self.min_value, self.max_value = min_value, max_value
+        models.IntegerField.__init__(self, verbose_name, name, **kwargs)
+
+    def formfield(self, **kwargs):
+        defaults = {'min_value': self.min_value, 'max_value':self.max_value}
+        defaults.update(kwargs)
+        return super(IntegerRangeField, self).formfield(**defaults)
 
 
 class Employees(models.Model):
@@ -7,8 +20,8 @@ class Employees(models.Model):
     FIO = models.CharField(verbose_name='ФИО', max_length=50)
     post = models.CharField(verbose_name='Должность', max_length=50)
     dateOfEmployment = models.DateField(verbose_name='Дата найма')
-    address = models.CharField(verbose_name='Адресс', max_length=50)
-    tel = models.IntegerField(verbose_name='Телефон')
+    address = models.CharField(verbose_name='Адрес', max_length=50)
+    tel = IntegerRangeField(verbose_name='Телефон', min_value=1, max_value=999999)
 
     def __str__(self):
         return self.FIO
@@ -21,8 +34,8 @@ class Employees(models.Model):
 class ClientBuy(models.Model):
     buyerCode = models.UUIDField(default=uuid.uuid4, verbose_name='Код', primary_key=True)
     FIO = models.CharField(verbose_name='ФИО', max_length=50)
-    address = models.CharField(verbose_name='Адресс', max_length=50)
-    tel = models.IntegerField(verbose_name='Телефон')
+    address = models.CharField(verbose_name='Адрес', max_length=50)
+    tel = IntegerRangeField(verbose_name='Телефон', min_value=1, max_value=999999)
     passportCode = models.CharField(verbose_name='Код поспорта', help_text='2 буквы и 7 цифр', max_length=9)
     passportNumber = models.CharField(verbose_name='Индентификационный номер', help_text='14 символов', max_length=14)
 
@@ -37,8 +50,8 @@ class ClientBuy(models.Model):
 class ClientSell(models.Model):
     sellerCode = models.UUIDField(default=uuid.uuid4, verbose_name='Код', primary_key=True)
     FIO = models.CharField(verbose_name='ФИО', max_length=50)
-    address = models.CharField(verbose_name='Адресс', max_length=50)
-    tel = models.IntegerField(verbose_name='Телефон')
+    address = models.CharField(verbose_name='Адрес', max_length=50)
+    tel = IntegerRangeField(verbose_name='Телефон', min_value=1, max_value=999999)
     passportCode = models.CharField(verbose_name='Код поспорта', help_text='2 буквы и 7 цифр', max_length=9)
     passportNumber = models.CharField(verbose_name='Индентификационный номер', help_text='14 символов', max_length=14)
 
@@ -56,7 +69,7 @@ class Property(models.Model):
     name = models.CharField(verbose_name='Наименование объекта', max_length=50)
     area = models.IntegerField(verbose_name='Площадь м2')
     rooms = models.SmallIntegerField(verbose_name='Кол-во комнат')
-    street = models.CharField(verbose_name='Улица', max_length=50)
+    address = models.CharField(verbose_name='Адрес', max_length=50)
     price = models.IntegerField(verbose_name='Цена')
     seller = models.ForeignKey(
         ClientSell,
@@ -64,6 +77,7 @@ class Property(models.Model):
         on_delete=models.CASCADE,
         null=True
     )
+    ifSelled = models.BooleanField(verbose_name='Состояние продажи', default=False)
 
     def __str__(self):
         return '%s (%s)' % (self.name, self.applicationCode)
@@ -71,6 +85,9 @@ class Property(models.Model):
     class Meta:
         verbose_name = 'Недвижимость'
         verbose_name_plural = 'Недвижимость'
+
+    def save(self, *args, **kwargs):
+        super(Property, self).save(*args, **kwargs)
 
 
 class SelledProperty(models.Model):
@@ -107,5 +124,28 @@ class SelledProperty(models.Model):
         return str(a)
 
     class Meta:
-        verbose_name = 'Проданный объект'
-        verbose_name_plural = 'Проданные объекты'
+        verbose_name = 'Совершенная сделка'
+        verbose_name_plural = 'Совершенные сделки'
+
+    def save(self, *args, **kwargs):
+        super(SelledProperty, self).save(*args, **kwargs)
+
+
+
+
+'''
+@receiver(post_save, sender=SelledProperty, dispatch_uid="update_property")
+def update_property(sender, created, instance, update_fields=["ifSelled"], **kwargs):
+        if created:
+            property = Property.objects.get(applicationCode=instance.applicationCode)
+            property.update(ifSelled=True)
+
+
+
+def profile_thumbanil(sender, created, instance , update_fields=["thumbnail_image"], **kwargs):
+    profile = UserProfile.objects.get(id = instance.id)
+    thumb = handlers.create_thumbanil(profile.image, profile.user_id)
+    profile.update(thumbnail_image = thumb)
+
+post_save.connect(profile_thumbanil, sender=UserProfile)
+'''

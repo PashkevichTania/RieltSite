@@ -16,4 +16,19 @@ Main page
         <li>Юридическое сопровождение сделки.</li>
         <li>Консультации по вопросам сделок с недвижимостью.</li>
     </ul>
+    <h2 class="mt-5">Наши сотрудники</h2>
+    <table class="table table-bordered table-dark ">
+        <tr class="bg-warning text-dark">
+            <th>ФИО</th>
+            <th>Должность</th>
+            <th>Телефон</th>
+        </tr>
+        {% for el in employees %}
+        <tr>
+            <td>{{ el.FIO }}</td>
+            <td>{{ el.post }}</td>
+            <td>{{ el.tel }}</td>
+        </tr>
+        {% endfor %}
+    </table>
 {% endblock %}

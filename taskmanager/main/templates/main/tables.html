@@ -5,31 +5,17 @@ Main page
 {% endblock %}
 
 {% block content %}
-    <h1>Tables</h1>
-    <h2>Employees</h2>
-    <table class="table table-bordered table-dark">
-        <tr>
-            <td>ФИО</td>
-            <td>Должность</td>
-            <td>Телефон</td>
-        </tr>
-        {% for el in employees %}
-        <tr>
-            <td>{{ el.FIO }}</td>
-            <td>{{ el.post }}</td>
-            <td>{{ el.tel }}</td>
-        </tr>
-        {% endfor %}
-    </table>
-    <h2>Selled poroperties</h2>
+    <h1>Недвижимость</h1>
+    <h2>Недвижимость на продажу</h2>
     <table class="table table-bordered table-dark">
         <tr>
             <td>Дата составления заказа</td>
             <td>Наименование объекта</td>
             <td>Площадь м2</td>
             <td>Кол-во комнат</td>
-            <td>Улица</td>
+            <td>Адрес</td>
             <td>Цена</td>
+            <td>Состояние продажи</td>
         </tr>
         {% for el in property %}
         <tr>
@@ -37,8 +23,9 @@ Main page
             <td>{{ el.name }}</td>
             <td>{{ el.area }}</td>
             <td>{{ el.rooms }}</td>
-            <td>{{ el.street }}</td>
+            <td>{{ el.address }}</td>
             <td>{{ el.price }}</td>
+            <td>{{ el.ifSelled }}</td>
         </tr>
         {% endfor %}
     </table>
