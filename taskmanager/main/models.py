@@ -36,8 +36,16 @@ class ClientBuy(models.Model):
     FIO = models.CharField(verbose_name='ФИО', max_length=50)
     address = models.CharField(verbose_name='Адрес', max_length=50)
     tel = IntegerRangeField(verbose_name='Телефон', min_value=1, max_value=999999)
-    passportCode = models.CharField(verbose_name='Код поспорта', help_text='2 буквы и 7 цифр', max_length=9)
-    passportNumber = models.CharField(verbose_name='Индентификационный номер', help_text='14 символов', max_length=14)
+    passportCode = models.CharField(verbose_name='Код поспорта',
+                                    help_text='2 буквы и 7 цифр',
+                                    max_length=9,
+                                    min_length =9,
+                                    unique=True)
+    passportNumber = models.CharField(verbose_name='Индентификационный номер',
+                                      help_text='14 символов',
+                                      max_length=14,
+                                      min_length=14,
+                                      unique=True)
 
     def __str__(self):
         return self.FIO
@@ -52,8 +60,16 @@ class ClientSell(models.Model):
     FIO = models.CharField(verbose_name='ФИО', max_length=50)
     address = models.CharField(verbose_name='Адрес', max_length=50)
     tel = IntegerRangeField(verbose_name='Телефон', min_value=1, max_value=999999)
-    passportCode = models.CharField(verbose_name='Код поспорта', help_text='2 буквы и 7 цифр', max_length=9)
-    passportNumber = models.CharField(verbose_name='Индентификационный номер', help_text='14 символов', max_length=14)
+    passportCode = models.CharField(verbose_name='Код поспорта',
+                                    help_text='2 буквы и 7 цифр',
+                                    max_length=9,
+                                    min_length=9,
+                                    unique=True)
+    passportNumber = models.CharField(verbose_name='Индентификационный номер',
+                                      help_text='14 символов',
+                                      max_length=14,
+                                      min_length=14,
+                                      unique=True)
 
     def __str__(self):
         return self.FIO
