@@ -5,32 +5,44 @@ Requests
 {% endblock %}
 
 {% block content %}
-    <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
-        <div class="card-header">Поиск квартир</div>
+    <div class="row justify-content-md-center">
+    <div class="card text-white bg-primary mb-3 w-75">
+        <div class="card-header d-flex justify-content-center"><h3>Поиск квартир</h3></div>
         <div class="card-body">
-            <h5 class="card-title">Поиск квартиру по адресу</h5>
             <form action="" method="POST">
                 {% csrf_token %}
-                {{ form1.as_p }}
-                {{ form2.as_p }}
-                {{ form3.as_p }}
-                {{ form4.as_p }}
-                <input type="Submit" name="submit" value="Поиск"/>
+                <div class="row d-flex justify-content-end">
+                    <div class="col-md-auto ">
+                        {{ form1.as_p }}
+                    </div>
+                    <div class="col-md-auto">
+                        {{ form2.as_p }}
+                    </div>
+                </div>
+                <div class="row d-flex justify-content-end">
+                    <div class="col-md-auto">
+                        {{ form3.as_p }}
+                    </div>
+                    <div class="col-md-auto">
+                        {{ form4.as_p }}
+                    </div>
+                </div>
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <input type="Submit" name="submit" value="Поиск" class="btn btn-light btn-lg"/>
+                </div>
             </form>
         </div>
     </div>
-
+    </div>
     {% if submitbutton == "Поиск" %}
-    <h2>Квартиры по адресу содержащему{{ address }}:</h2>
         <table class="table table-bordered table-dark">
-        <tr>
-            <td>Дата составления заказа</td>
-            <td>Наименование объекта</td>
-            <td>Площадь м2</td>
-            <td>Кол-во комнат</td>
-            <td>Адрес</td>
-            <td>Цена</td>
-            <td>Состояние продажи</td>
+        <tr class="bg-warning text-dark">
+            <th>Дата составления заказа</th>
+            <th>Наименование объекта</th>
+            <th>Площадь м2</th>
+            <th>Кол-во комнат</th>
+            <th>Адрес</th>
+            <th>Цена</th>
         </tr>
         {% for el in property %}
         <tr>
@@ -40,7 +52,6 @@ Requests
             <td>{{ el.rooms }}</td>
             <td>{{ el.address }}</td>
             <td>{{ el.price }}</td>
-            <td>{{ el.ifSelled }}</td>
         </tr>
         {% endfor %}
     </table>

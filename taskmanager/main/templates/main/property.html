@@ -5,17 +5,16 @@ Property
 {% endblock %}
 
 {% block content %}
-    <h1>Недвижимость</h1>
     <h2>Недвижимость на продажу</h2>
-    <table class="table table-bordered table-dark">
-        <tr>
-            <td>Дата составления заказа</td>
-            <td>Наименование объекта</td>
-            <td>Площадь м2</td>
-            <td>Кол-во комнат</td>
-            <td>Адрес</td>
-            <td>Цена</td>
-            <td>Состояние продажи</td>
+    <table class="table table-bordered table-dark mt-3">
+        <tr class="bg-warning text-dark">
+            <th>Дата составления заказа</th>
+            <th>Наименование объекта</th>
+            <th>Площадь м2</th>
+            <th>Кол-во комнат</th>
+            <th>Адрес</th>
+            <th>Цена</th>
+            <th>Состояние продажи</th>
         </tr>
         {% for el in property %}
         <tr>
