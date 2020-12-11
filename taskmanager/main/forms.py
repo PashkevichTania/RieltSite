@@ -110,8 +110,16 @@ class PropForm(ModelForm):
 
 
 class FindAddress(forms.Form):
-    address = forms.CharField(max_length=50)
+    address = forms.CharField(label='Адрес содержит', max_length=50, required=False)
 
 
 class FindRooms(forms.Form):
-    rooms = forms.IntegerField()
+    rooms = forms.IntegerField(label='Количество комнат', required=False)
+
+
+class FindArea(forms.Form):
+    area = forms.IntegerField(label='Минимальная площадь', required=False)
+
+
+class FindPrice(forms.Form):
+    price = forms.IntegerField(label='Максимальная цена', required=False)

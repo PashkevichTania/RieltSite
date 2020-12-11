@@ -8,7 +8,7 @@ from rest_framework import viewsets
 from .serializers import EmployeesSerializer
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.models import User
-from .forms import SellForm, BuyForm, PropForm, FindAddress, FindRooms
+from .forms import SellForm, BuyForm, PropForm, FindAddress, FindRooms, FindArea, FindPrice
 
 
 def index(request):
@@ -64,26 +64,50 @@ def user_forms(request):
 
 
 def requests(request):
-    # property = Property.objects.filter(ifSelled=False)
     submitbutton = request.POST.get("submit")
 
-    address = ''
-    rooms = ''
+    price = None
+    area = None
+    address = None
+    rooms = None
     property = ''
 
     form1 = FindAddress(request.POST or None)
     form2 = FindRooms(request.POST or None)
-    if form1.is_valid() and form2.is_valid():
+    form3 = FindArea(request.POST or None)
+    form4 = FindPrice(request.POST or None)
+    if form1.is_valid() and form2.is_valid() and form3.is_valid() and form4.is_valid():
         address = form1.cleaned_data.get("address")
         rooms = form2.cleaned_data.get("rooms")
-        property = Property.objects.filter(address__contains=address, rooms=rooms, ifSelled=False)
+        area = form3.cleaned_data.get("area")
+        price = form4.cleaned_data.get("price")
+        if area is None:
+            area = 1
+        if price is None:
+            price = 9*10**10
+        if rooms is not None and address is not None:
+            property = Property.objects.filter(address__contains=address, rooms=rooms, ifSelled=False,
+                                               area__gt=area, price__lt=price)
+        elif rooms is not None:
+            property = Property.objects.filter(rooms=rooms, ifSelled=False,
+                                               area__gt=area, price__lt=price)
+        elif address is not None:
+            property = Property.objects.filter(address__contains=address, ifSelled=False,
+                                               area__gt=area, price__lt=price)
+        else:
+            property = Property.objects.filter(ifSelled=False,
+                                               area__gt=area, price__lt=price)
 
     context = {'form1': form1,
                'form2': form2,
+               'form3': form3,
+               'form4': form4,
                'submitbutton': submitbutton,
+               'property': property,
                'address': address,
                'rooms': rooms,
-               'property': property,
+               'area': area,
+               'price': price,
                }
 
     return render(request, 'main/requests.html', context)

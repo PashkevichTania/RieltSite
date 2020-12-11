@@ -5,13 +5,20 @@ Requests
 {% endblock %}
 
 {% block content %}
-    <h1>Поиск квартиру по адресу</h1>
-    <form action="" method="POST">
-    {% csrf_token %}
-    {{ form1.as_p }}
-    {{ form2.as_p }}
-    <input type="Submit" name="submit" value="Поиск"/>
-    </form>
+    <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
+        <div class="card-header">Поиск квартир</div>
+        <div class="card-body">
+            <h5 class="card-title">Поиск квартиру по адресу</h5>
+            <form action="" method="POST">
+                {% csrf_token %}
+                {{ form1.as_p }}
+                {{ form2.as_p }}
+                {{ form3.as_p }}
+                {{ form4.as_p }}
+                <input type="Submit" name="submit" value="Поиск"/>
+            </form>
+        </div>
+    </div>
 
     {% if submitbutton == "Поиск" %}
     <h2>Квартиры по адресу содержащему{{ address }}:</h2>
