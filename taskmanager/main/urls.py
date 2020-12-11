@@ -9,8 +9,9 @@ router.register('api/employees', EmployeesViewSet)
 
 urlpatterns = [
     path('', views.index, name='home'),
-    path('tables', views.tables, name='tables'),
+    path('property', views.property, name='property'),
     path('requests', views.requests, name='requests'),
+    path('user_forms', views.user_forms, name='user_forms'),
     path('stuff_auth', views.stuff_auth, name='stuff_auth'),
     path('test', views.test, name='test'),
 ]

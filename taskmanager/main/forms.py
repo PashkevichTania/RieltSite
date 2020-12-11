@@ -1,5 +1,6 @@
 from .models import ClientSell, ClientBuy, Property
 from django.forms import ModelForm, TextInput, Textarea, NumberInput, ModelChoiceField, DateInput, Select
+from django import forms
 
 
 class SellForm(ModelForm):
@@ -106,3 +107,11 @@ class PropForm(ModelForm):
                 'placeholder': 'Выберете продавца',
             }),
         }
+
+
+class FindAddress(forms.Form):
+    address = forms.CharField(max_length=50)
+
+
+class FindRooms(forms.Form):
+    rooms = forms.IntegerField()

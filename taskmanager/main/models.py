@@ -1,5 +1,6 @@
 from django.db import models
 import uuid
+from django.core.validators import RegexValidator
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
@@ -36,15 +37,15 @@ class ClientBuy(models.Model):
     FIO = models.CharField(verbose_name='ФИО', max_length=50)
     address = models.CharField(verbose_name='Адрес', max_length=50)
     tel = IntegerRangeField(verbose_name='Телефон', min_value=1, max_value=999999)
-    passportCode = models.CharField(verbose_name='Код поспорта',
+    passportCode = models.CharField(validators=[RegexValidator(regex='^.{9}$', message='Длинна = 9', code='nomatch')],
+                                    verbose_name='Код поспорта',
                                     help_text='2 буквы и 7 цифр',
                                     max_length=9,
-                                    min_length =9,
                                     unique=True)
-    passportNumber = models.CharField(verbose_name='Индентификационный номер',
+    passportNumber = models.CharField(validators=[RegexValidator(regex='^.{14}$', message='Длинна = 14', code='nomatch')],
+                                      verbose_name='Индентификационный номер',
                                       help_text='14 символов',
                                       max_length=14,
-                                      min_length=14,
                                       unique=True)
 
     def __str__(self):
@@ -60,15 +61,15 @@ class ClientSell(models.Model):
     FIO = models.CharField(verbose_name='ФИО', max_length=50)
     address = models.CharField(verbose_name='Адрес', max_length=50)
     tel = IntegerRangeField(verbose_name='Телефон', min_value=1, max_value=999999)
-    passportCode = models.CharField(verbose_name='Код поспорта',
+    passportCode = models.CharField(validators=[RegexValidator(regex='^.{9}$', message='Длинна = 9', code='nomatch')],
+                                    verbose_name='Код поспорта',
                                     help_text='2 буквы и 7 цифр',
                                     max_length=9,
-                                    min_length=9,
                                     unique=True)
-    passportNumber = models.CharField(verbose_name='Индентификационный номер',
+    passportNumber = models.CharField(validators=[RegexValidator(regex='^.{14}$', message='Длинна = 14', code='nomatch')],
+                                      verbose_name='Индентификационный номер',
                                       help_text='14 символов',
                                       max_length=14,
-                                      min_length=14,
                                       unique=True)
 
     def __str__(self):
@@ -148,13 +149,18 @@ class SelledProperty(models.Model):
 
 
 
-
 '''
+
 @receiver(post_save, sender=SelledProperty, dispatch_uid="update_property")
-def update_property(sender, created, instance, update_fields=["ifSelled"], **kwargs):
+def update_property(sender, created, instance, **kwargs):
+        #x1 = instance.applicationCode.find("(")
+        #x2 = instance.applicationCode.find(")")
+        #x = instance.applicationCode[x1+1: x2]
         if created:
-            property = Property.objects.get(applicationCode=instance.applicationCode)
-            property.update(ifSelled=True)
+            property = Property.objects.get(applicationCode = instance.applicationCode)
+            property.ifSelled=True
+            property.save()
+
 
 
 

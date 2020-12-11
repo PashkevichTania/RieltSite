@@ -8,7 +8,7 @@ from rest_framework import viewsets
 from .serializers import EmployeesSerializer
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.models import User
-from .forms import SellForm, BuyForm, PropForm
+from .forms import SellForm, BuyForm, PropForm, FindAddress, FindRooms
 
 
 def index(request):
@@ -18,23 +18,15 @@ def index(request):
     })
 
 
-def tables(request):
-    employees = Employees.objects.all()
-    clientBuy = ClientBuy.objects.all()
-    clientSell = ClientSell.objects.all()
-    property = Property.objects.all()
-    selledProperty = SelledProperty.objects.all()
+def property(request):
+    property = Property.objects.filter(ifSelled=False)
 
-    return render(request, 'main/tables.html', {
-        'employees': employees,
-        'clientBuy': clientBuy,
-        'clientSell': clientSell,
+    return render(request, 'main/property.html', {
         'property': property,
-        'selledProperty': selledProperty
     })
 
 
-def requests(request):
+def user_forms(request):
     error1 = ''
     error2 = ''
     error3 = ''
@@ -68,6 +60,32 @@ def requests(request):
         'form3': form3,
         'error3': error3,
     }
+    return render(request, 'main/user_forms.html', context)
+
+
+def requests(request):
+    # property = Property.objects.filter(ifSelled=False)
+    submitbutton = request.POST.get("submit")
+
+    address = ''
+    rooms = ''
+    property = ''
+
+    form1 = FindAddress(request.POST or None)
+    form2 = FindRooms(request.POST or None)
+    if form1.is_valid() and form2.is_valid():
+        address = form1.cleaned_data.get("address")
+        rooms = form2.cleaned_data.get("rooms")
+        property = Property.objects.filter(address__contains=address, rooms=rooms, ifSelled=False)
+
+    context = {'form1': form1,
+               'form2': form2,
+               'submitbutton': submitbutton,
+               'address': address,
+               'rooms': rooms,
+               'property': property,
+               }
+
     return render(request, 'main/requests.html', context)
 
 
@@ -76,7 +94,24 @@ def stuff_auth(request):
 
 
 def test(request):
-    return render(request, 'main/test.html',)
+    #property = Property.objects.filter(ifSelled=False)
+    submitbutton = request.POST.get("submit")
+
+    address = ''
+    property = ''
+
+    form = FindAddress(request.POST or None)
+    if form.is_valid():
+        address = form.cleaned_data.get("address")
+        property = Property.objects.filter(address__contains=address)
+
+    context = {'form': form,
+               'address': address,
+               'submitbutton': submitbutton,
+               'property': property,
+               }
+
+    return render(request, 'main/test.html', context)
 
 
 class EmployeesViewSet(viewsets.ModelViewSet):

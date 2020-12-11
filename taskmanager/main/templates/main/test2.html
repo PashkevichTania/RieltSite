@@ -1,0 +1,50 @@
+{% extends 'main/base.html' %}
+
+{% block title %}
+test
+{% endblock %}
+
+{% block content %}
+
+    {% verbatim %}
+        <div class="container" id="emp">
+            <h2 class="mt-5">Наши сотрудники</h2>
+            <table class="table table-bordered table-dark ">
+                <tr class="bg-warning text-dark">
+                    <th>ФИО</th>
+                    <th>Должность</th>
+                    <th>Телефон</th>
+                </tr>
+                <tr v-for="el in employees">
+                        <td>{{ el.FIO }}</td>
+                        <td>{{ el.post }}</td>
+                        <td>{{ el.tel }}</td>
+                </tr>
+            </table>
+        <b-container fluid="md" class="Button" id="find_emp">
+        <b-row align-h="center">
+          <b-col lg="150">
+            <b-input-group prepend="Find employee" class="mt-3" size="md">
+              <b-form-input v-model="emp" placeholder="find"></b-form-input>
+              <b-input-group-append>
+                <b-button variant="info" type="button">Enter</b-button>
+              </b-input-group-append>
+            </b-input-group>
+          </b-col>
+        </b-row>
+      </b-container>
+<div>emp:{{ emp }}</div>
+
+        <div>{{ employees }}</div>
+        </div>
+
+
+    {% endverbatim %}
+
+
+
+{% endblock %}
+{% block script %}
+<script src="/static/emp.js"></script>
+{% endblock %}
+#@click="find"
