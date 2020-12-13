@@ -19,7 +19,8 @@ def index(request):
 
 
 def property(request):
-    property = Property.objects.filter(ifSelled=False)
+    #property = Property.objects.filter(ifSelled=False)
+    property = Property.objects.all()
 
     return render(request, 'main/property.html', {
         'property': property,
@@ -95,8 +96,7 @@ def requests(request):
             property = Property.objects.filter(address__contains=address, ifSelled=False,
                                                area__gt=area, price__lt=price)
         else:
-            property = Property.objects.filter(ifSelled=False,
-                                               area__gt=area, price__lt=price)
+            property = Property.objects.filter(ifSelled=False)
 
     context = {'form1': form1,
                'form2': form2,
@@ -118,24 +118,11 @@ def stuff_auth(request):
 
 
 def test(request):
-    #property = Property.objects.filter(ifSelled=False)
-    submitbutton = request.POST.get("submit")
+    property = Property.objects.all()
 
-    address = ''
-    property = ''
-
-    form = FindAddress(request.POST or None)
-    if form.is_valid():
-        address = form.cleaned_data.get("address")
-        property = Property.objects.filter(address__contains=address)
-
-    context = {'form': form,
-               'address': address,
-               'submitbutton': submitbutton,
-               'property': property,
-               }
-
-    return render(request, 'main/test.html', context)
+    return render(request, 'main/test.html', {
+        'property': property,
+    })
 
 
 class EmployeesViewSet(viewsets.ModelViewSet):

@@ -84,10 +84,10 @@ class Property(models.Model):
     applicationCode = models.UUIDField(default=uuid.uuid4, verbose_name='Код заявки', primary_key=True)
     dateOfOrder = models.DateField(verbose_name='Дата составления заказа')
     name = models.CharField(verbose_name='Наименование объекта', max_length=50)
-    area = models.IntegerField(verbose_name='Площадь м2')
-    rooms = models.SmallIntegerField(verbose_name='Кол-во комнат')
+    area = IntegerRangeField(verbose_name='Площадь м2', min_value=1)
+    rooms = IntegerRangeField(verbose_name='Кол-во комнат', min_value=0)
     address = models.CharField(verbose_name='Адрес', max_length=50)
-    price = models.IntegerField(verbose_name='Цена')
+    price = IntegerRangeField(verbose_name='Цена', min_value=0)
     seller = models.ForeignKey(
         ClientSell,
         verbose_name='Продавец',

@@ -1,5 +1,5 @@
 from .models import ClientSell, ClientBuy, Property
-from django.forms import ModelForm, TextInput, Textarea, NumberInput, ModelChoiceField, DateInput, Select
+from django.forms import ModelForm, TextInput, NumberInput, ModelChoiceField, DateInput, Select
 from django import forms
 
 
