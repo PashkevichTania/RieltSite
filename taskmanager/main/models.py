@@ -121,12 +121,6 @@ class SelledProperty(models.Model):
         on_delete=models.CASCADE,
         null=True
     )
-    seller = models.ForeignKey(
-        ClientSell,
-        verbose_name='Продавец',
-        on_delete=models.CASCADE,
-        null=True
-    )
     buyer = models.ForeignKey(
         ClientBuy,
         verbose_name='Покупатель',
@@ -148,26 +142,13 @@ class SelledProperty(models.Model):
         super(SelledProperty, self).save(*args, **kwargs)
 
 
-
-'''
-
 @receiver(post_save, sender=SelledProperty, dispatch_uid="update_property")
 def update_property(sender, created, instance, **kwargs):
-        #x1 = instance.applicationCode.find("(")
-        #x2 = instance.applicationCode.find(")")
-        #x = instance.applicationCode[x1+1: x2]
-        if created:
-            property = Property.objects.get(applicationCode = instance.applicationCode)
-            property.ifSelled=True
-            property.save()
-
-
-
-
-def profile_thumbanil(sender, created, instance , update_fields=["thumbnail_image"], **kwargs):
-    profile = UserProfile.objects.get(id = instance.id)
-    thumb = handlers.create_thumbanil(profile.image, profile.user_id)
-    profile.update(thumbnail_image = thumb)
-
-post_save.connect(profile_thumbanil, sender=UserProfile)
-'''
+    if created:
+        a = str(instance.applicationCode)
+        x1 = a.find("(")
+        x2 = a.find(")")
+        x = a[x1 + 1: x2]
+        b = Property.objects.get(applicationCode=x)
+        b.ifSelled = True
+        b.save()
