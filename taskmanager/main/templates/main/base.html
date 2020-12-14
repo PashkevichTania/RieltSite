@@ -11,9 +11,9 @@
 </head>
 <body>
     <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
-      <h5 class="my-0 mr-md-auto font-weight-normal">Риэлторская компания ООО "Моя оборона"</h5>
+      <h5 class="my-0 mr-md-auto font-weight-normal mt-2">Риэлторская компания ООО "Моя оборона"</h5>
       <nav class="my-2 my-md-0 mr-md-3">
-          <div class="container mt-4">
+          <div class="container mt-3">
               <ul class="nav nav-pills">
                   <li class="nav-item">
                       {% url 'home' as url_home %}
@@ -33,7 +33,7 @@
                   </li>
                   <li class="nav-item">
                       {% url 'stuff_auth' as url_stuff_auth %}
-                      <a class="nav-link {% if url_stuff_auth == request.path %}active{% endif %}" href="{{url_stuff_auth}}">Для персоонала</a>
+                      <a class="nav-link {% if url_stuff_auth == request.path %}active{% endif %}" href="{{url_stuff_auth}}">Для персонала</a>
                   </li>
               </ul>
           </div>
