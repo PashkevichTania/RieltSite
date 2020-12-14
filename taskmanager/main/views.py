@@ -1,14 +1,11 @@
 from django.shortcuts import render, redirect
-from .models import Employees
-from .models import ClientBuy
-from .models import ClientSell
-from .models import Property
-from .models import SelledProperty
+from django.urls import reverse_lazy
+from .models import Employees, ClientBuy, ClientSell, Property, SelledProperty
 from rest_framework import viewsets
 from .serializers import EmployeesSerializer
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.models import User
-from .forms import SellForm, BuyForm, PropForm, FindAddress, FindRooms, FindArea, FindPrice
+from .forms import SellForm, BuyForm, PropForm, FindAddress, FindRooms, FindArea, FindPrice, AuthUserForm, SelledPropForm
 
 
 def index(request):
@@ -19,9 +16,7 @@ def index(request):
 
 
 def property(request):
-    #property = Property.objects.filter(ifSelled=False)
-    property = Property.objects.all()
-
+    property = Property.objects.filter(ifSelled=False)
     return render(request, 'main/property.html', {
         'property': property,
     })
@@ -114,15 +109,7 @@ def requests(request):
 
 
 def stuff_auth(request):
-    return render(request, 'main/stuff_auth.html',)
-
-
-def test(request):
-    property = Property.objects.all()
-
-    return render(request, 'main/test.html', {
-        'property': property,
-    })
+    return render(request, 'stuff/stuff_auth.html',)
 
 
 class EmployeesViewSet(viewsets.ModelViewSet):
@@ -130,4 +117,49 @@ class EmployeesViewSet(viewsets.ModelViewSet):
     serializer_class = EmployeesSerializer
 
 
+class MyprojectLoginView(LoginView):
+    template_name = 'stuff/login.html'
+    form_class = AuthUserForm
+    success_url = reverse_lazy('tables')
 
+
+    def get_success_url(self):
+        return self.success_url
+
+
+class MyProjectLogout(LogoutView):
+    next_page = reverse_lazy('home')
+
+
+
+def tables(request):
+    property = Property.objects.all()
+    client_sell = ClientSell.objects.all()
+    client_buy = ClientBuy.objects.all()
+    selled_prop = SelledProperty.objects.all()
+
+    return render(request, 'stuff/tables.html', {
+        'property': property,
+        'client_sell': client_sell,
+        'client_buy': client_buy,
+        'selled_prop': selled_prop,
+    })
+
+
+def stuff_forms(request):
+    error = ''
+    if request.method == 'POST':
+        form = SelledPropForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('tables')
+        else:
+            error = 'Форма была неверной'
+
+    form = SelledPropForm()
+    context = {
+        'form': form,
+        'error': error,
+    }
+
+    return render(request, 'stuff/stuff_forms.html', context)

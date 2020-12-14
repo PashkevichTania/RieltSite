@@ -109,7 +109,7 @@ class Property(models.Model):
 
 class SelledProperty(models.Model):
     contractCode = models.UUIDField(default=uuid.uuid4, verbose_name='Код договора', primary_key=True)
-    applicationCode = models.ForeignKey(
+    applicationCode = models.OneToOneField(
         Property,
         verbose_name='Код заявки',
         on_delete=models.CASCADE,
@@ -152,3 +152,4 @@ def update_property(sender, created, instance, **kwargs):
         b = Property.objects.get(applicationCode=x)
         b.ifSelled = True
         b.save()
+

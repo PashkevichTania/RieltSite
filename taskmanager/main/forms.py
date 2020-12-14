@@ -1,4 +1,7 @@
-from .models import ClientSell, ClientBuy, Property
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.models import User
+
+from .models import ClientSell, ClientBuy, Property, SelledProperty
 from django.forms import ModelForm, TextInput, NumberInput, ModelChoiceField, DateInput, Select
 from django import forms
 
@@ -123,3 +126,47 @@ class FindArea(forms.Form):
 
 class FindPrice(forms.Form):
     price = forms.IntegerField(label='Максимальная цена', required=False)
+
+
+class AuthUserForm(AuthenticationForm, forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('username', 'password')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs['class'] = 'form-control'
+
+
+class SelledPropForm(ModelForm):
+    class Meta:
+        model = SelledProperty
+        fields = ["applicationCode",
+                  "employee",
+                  "buyer",
+                  "dateOfOperation",
+                  "profit",
+                  ]
+        widgets = {
+            "applicationCode": Select(attrs={
+                'class': 'form-control',
+                'placeholder': 'Выберете код заявки',
+            }),
+            "employee": Select(attrs={
+                'class': 'form-control',
+                'placeholder': 'Выберете отрудника'
+            }),
+            "buyer": Select(attrs={
+                'class': 'form-control',
+                'placeholder': 'Выберете продавца',
+            }),
+            "dateOfOperation": DateInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Введите дату операции (dd.mm.yyyy)'
+            }),
+            "profit": NumberInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Введите прибыль'
+            }),
+        }

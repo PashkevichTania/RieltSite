@@ -13,7 +13,10 @@ urlpatterns = [
     path('requests', views.requests, name='requests'),
     path('user_forms', views.user_forms, name='user_forms'),
     path('stuff_auth', views.stuff_auth, name='stuff_auth'),
-    path('test', views.test, name='test'),
+    path('login', views.MyprojectLoginView.as_view(), name='login_page'),
+    path('logout', views.MyProjectLogout.as_view(), name='logout_page'),
+    path('tables', views.tables, name='tables'),
+    path('stuff_forms', views.stuff_forms, name='stuff_forms'),
 ]
 
 urlpatterns += router.urls
