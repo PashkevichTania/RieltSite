@@ -24,8 +24,8 @@
                       <a class="nav-link btn-info {% if url_tables == request.path %}active{% endif %} mr-3" href="{{url_tables}}">Таблицы</a>
                   </li>
                   <li class="nav-item">
-                       {% url 'stuff_forms' as url_stuff_forms %}
-                      <a class="nav-link btn-info {% if url_stuff_forms == request.path %}active{% endif %} mr-3" href="{{url_stuff_forms}}">Сделки</a>
+                       {% url 'stuff_deals' as url_stuff_deals %}
+                      <a class="nav-link btn-info {% if url_stuff_deals == request.path %}active{% endif %} mr-3" href="{{url_stuff_deals}}">Сделки</a>
                   </li>
                   <li class="nav-item">
                       <a class="nav-link active mr-3" href='admin'>Админ панель</a>

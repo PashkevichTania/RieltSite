@@ -1,5 +1,7 @@
+from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import render, redirect
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
+from django.views.generic import UpdateView
 from .models import Employees, ClientBuy, ClientSell, Property, SelledProperty
 from rest_framework import viewsets
 from .serializers import EmployeesSerializer
@@ -131,7 +133,6 @@ class MyProjectLogout(LogoutView):
     next_page = reverse_lazy('home')
 
 
-
 def tables(request):
     property = Property.objects.all()
     client_sell = ClientSell.objects.all()
@@ -146,13 +147,13 @@ def tables(request):
     })
 
 
-def stuff_forms(request):
+def stuff_deals(request):
+    selled_prop = SelledProperty.objects.all()
     error = ''
     if request.method == 'POST':
         form = SelledPropForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('tables')
         else:
             error = 'Форма была неверной'
 
@@ -160,6 +161,28 @@ def stuff_forms(request):
     context = {
         'form': form,
         'error': error,
+        'selled_prop': selled_prop,
     }
 
-    return render(request, 'stuff/stuff_forms.html', context)
+    return render(request, 'stuff/stuff_deals.html', context)
+
+
+def delete(request, pk):
+    get_article = SelledProperty.objects.get(pk=pk)
+    get_article.delete()
+
+    return redirect(reverse('stuff'))
+
+
+class MyUpdateView(UpdateView):
+    model = SelledProperty
+    template_name = 'stuff/stuff_deals.html'
+    form_class = SelledPropForm
+    success_url = reverse_lazy('stuff_deals')
+    #success_message = 'Запись успешно обновлена'
+    def get_context_data(self,**kwargs):
+        kwargs['update'] = True
+        return super().get_context_data(**kwargs)
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        return kwargs

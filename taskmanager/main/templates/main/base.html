@@ -17,23 +17,28 @@
               <ul class="nav nav-pills">
                   <li class="nav-item">
                       {% url 'home' as url_home %}
-                      <a class="nav-link {% if url_home == request.path %}active{% endif %}" href="{{url_home}}">Главная</a>
+                      <a class="nav-link {% if url_home == request.path %}active{% endif %}"
+                         href="{{url_home}}">Главная</a>
                   </li>
                   <li class="nav-item">
                       {% url 'property' as url_property %}
-                      <a class="nav-link {% if url_property == request.path %}active{% endif %}" href="{{url_property}}">Недвижимость</a>
+                      <a class="nav-link {% if url_property == request.path %}active{% endif %}"
+                         href="{{url_property}}">Недвижимость</a>
                   </li>
                   <li class="nav-item">
                       {% url 'requests' as url_requests %}
-                      <a class="nav-link {% if url_requests == request.path %}active{% endif %}" href="{{url_requests}}">Поиск квартир</a>
+                      <a class="nav-link {% if url_requests == request.path %}active{% endif %}"
+                         href="{{url_requests}}">Поиск квартир</a>
                   </li>
                   <li class="nav-item">
                       {% url 'user_forms' as url_user_forms %}
-                      <a class="nav-link {% if url_user_forms == request.path %}active{% endif %}" href="{{url_user_forms}}">Для продавцов\покупателей</a>
+                      <a class="nav-link {% if url_user_forms == request.path %}active{% endif %}"
+                         href="{{url_user_forms}}">Для продавцов\покупателей</a>
                   </li>
                   <li class="nav-item">
                       {% url 'stuff_auth' as url_stuff_auth %}
-                      <a class="nav-link {% if url_stuff_auth == request.path %}active{% endif %}" href="{{url_stuff_auth}}">Для персонала</a>
+                      <a class="nav-link {% if url_stuff_auth == request.path %}active{% endif %}"
+                         href="{{url_stuff_auth}}">Для персонала</a>
                   </li>
               </ul>
           </div>

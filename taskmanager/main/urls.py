@@ -16,7 +16,9 @@ urlpatterns = [
     path('login', views.MyprojectLoginView.as_view(), name='login_page'),
     path('logout', views.MyProjectLogout.as_view(), name='logout_page'),
     path('tables', views.tables, name='tables'),
-    path('stuff_forms', views.stuff_forms, name='stuff_forms'),
+    path('stuff_deals', views.stuff_deals, name='stuff_deals'),
+    path('delete/<str:pk>', views.delete, name='delete'),
+    path('update/<str:pk>', views.MyUpdateView.as_view(), name='update'),
 ]
 
 urlpatterns += router.urls
