@@ -10,37 +10,49 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
 </head>
 <body>
-    <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
-      <h5 class="my-0 mr-md-auto font-weight-normal">Риэлторская компания ООО "Моя оборона"</h5>
-      <nav class="my-2 my-md-0 mr-md-3">
-          <div class="container mt-2">
-              <ul class="nav nav-pills">
-                  <li class="nav-item">
-                      {% url 'home' as url_home %}
-                      <a class="nav-link active mr-3" href={{ url_home }}>Вернуться на главную</a>
-                  </li>
-                  <li class="nav-item">
-                       {% url 'tables' as url_tables %}
-                      <a class="nav-link btn-info {% if url_tables == request.path %}active{% endif %} mr-3" href="{{url_tables}}">Таблицы</a>
-                  </li>
-                  <li class="nav-item">
-                       {% url 'stuff_deals' as url_stuff_deals %}
-                      <a class="nav-link btn-info {% if url_stuff_deals == request.path %}active{% endif %} mr-3" href="{{url_stuff_deals}}">Сделки</a>
-                  </li>
-                  <li class="nav-item">
-                      <a class="nav-link active mr-3" href='admin'>Админ панель</a>
-                  </li>
-                  <li class="nav-item">
-                      {% url 'logout_page' as url_logout_page %}
-                      <a class="nav-link btn-danger active ml-5" href={{ url_logout_page }}>Выйти</a>
-                  </li>
-              </ul>
-          </div>
-      </nav>
-    </div>
-    <div class="container">
-        {% block content %}{% endblock %}
-    </div>
+<div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
+    <h5 class="my-0 mr-md-auto font-weight-normal">Риэлторская компания ООО "Моя оборона"</h5>
+    <nav class="my-2 my-md-0 mr-md-3">
+        <div class="container mt-2">
+            <ul class="nav nav-pills">
+                <li class="nav-item">
+                    {% url 'home' as url_home %}
+                    <a class="nav-link active mr-3" href={{ url_home }}>Вернуться на главную</a>
+                </li>
+                <li class="nav-item">
+                    {% url 'tables' as url_tables %}
+                    <a class="nav-link btn-info {% if url_tables == request.path %}active{% endif %} mr-3"
+                       href="{{ url_tables }}">Таблицы</a>
+                </li>
+                <li class="nav-item">
+                    {% url 'stuff_deals' as url_stuff_deals %}
+                    <a class="nav-link btn-info {% if url_stuff_deals == request.path %}active{% endif %} mr-3"
+                       href="{{ url_stuff_deals }}">Сделки</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active mr-3" href='admin'>Админ панель</a>
+                </li>
+                <li class="nav-item">
+                    {% url 'logout_page' as url_logout_page %}
+                    <a class="nav-link btn-danger active ml-5" href={{ url_logout_page }}>Выйти</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</div>
+<div class="container">
+
+    {% if request.user.is_authenticated %}
+        {% block content %}
+        {% endblock %}
+    {% else %}
+        <h1 class="text-center mt-5">Для работы с этой страницей необходима авторизация</h1>
+        <div class="container d-flex justify-content-center mt-5">
+            <a href="login" class="btn btn-lg btn-primary">Авторизоваться</a>
+        </div>
+    {% endif %}
+
+</div>
 {% block script %}{% endblock %}
 </body>
 </html>

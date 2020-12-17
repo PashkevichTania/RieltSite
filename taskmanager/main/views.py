@@ -110,10 +110,7 @@ def requests(request):
     return render(request, 'main/requests.html', context)
 
 
-def stuff_auth(request):
-    return render(request, 'stuff/stuff_auth.html',)
-
-
+# serializer for API
 class EmployeesViewSet(viewsets.ModelViewSet):
     queryset = Employees.objects.all()
     serializer_class = EmployeesSerializer
@@ -168,8 +165,8 @@ def stuff_deals(request):
 
 
 def delete(request, pk):
-    get_article = SelledProperty.objects.get(pk=pk)
-    get_article.delete()
+    get_selled_prop = SelledProperty.objects.get(pk=pk)
+    get_selled_prop.delete()
 
     return redirect(reverse('stuff'))
 
