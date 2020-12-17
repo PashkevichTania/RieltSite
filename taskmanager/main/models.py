@@ -142,14 +142,34 @@ class SelledProperty(models.Model):
         super(SelledProperty, self).save(*args, **kwargs)
 
 
+class DealsBackup(models.Model):
+    create_date = models.DateTimeField(auto_now=True)
+    contractCode = models.CharField(verbose_name='Код договора', max_length=100)
+    applicationCode = models.CharField(verbose_name='Код заявки', max_length=100)
+    dateOfOrder = models.DateField(verbose_name='Дата составления заказа')
+    dateOfOperation = models.DateField(verbose_name='Дата операции')
+    employee = models.CharField(verbose_name='Сотрудник', max_length=50)
+    buyer = models.CharField(verbose_name='Покупатель', max_length=50)
+    seller = models.CharField(verbose_name='Продавец', max_length=50)
+    price = models.CharField(verbose_name='Цена', max_length=50)
+    profit = models.CharField(verbose_name='Прибыль', max_length=50)
+
+    def __str__(self):
+        return '%s (%s)' % (self.create_date, self.applicationCode)
+
+    class Meta:
+        verbose_name = 'Резервная копия сделки'
+        verbose_name_plural = 'Резервные копии сделок'
+
+
 @receiver(post_save, sender=SelledProperty, dispatch_uid="update_property")
 def update_property(sender, created, instance, **kwargs):
     if created:
-        a = str(instance.applicationCode)
-        x1 = a.find("(")
-        x2 = a.find(")")
-        x = a[x1 + 1: x2]
-        b = Property.objects.get(applicationCode=x)
-        b.ifSelled = True
-        b.save()
+        aplcode = str(instance.applicationCode)
+        x1 = aplcode.find("(")
+        x2 = aplcode.find(")")
+        x = aplcode[x1 + 1: x2]
+        prop = Property.objects.get(applicationCode=x)
+        prop.ifSelled = True
+        prop.save()
 

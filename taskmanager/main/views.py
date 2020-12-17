@@ -1,8 +1,7 @@
-from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
-from django.views.generic import UpdateView
-from .models import Employees, ClientBuy, ClientSell, Property, SelledProperty
+from django.views.generic import UpdateView, CreateView
+from .models import Employees, ClientBuy, ClientSell, Property, SelledProperty, DealsBackup
 from rest_framework import viewsets
 from .serializers import EmployeesSerializer
 from django.contrib.auth.views import LoginView, LogoutView
@@ -10,13 +9,12 @@ from django.contrib.auth.models import User
 from .forms import SellForm, BuyForm, PropForm, FindAddress, FindRooms, FindArea, FindPrice, AuthUserForm, SelledPropForm
 
 
+# главная страница
 def index(request):
-    employees = Employees.objects.all()
-    return render(request, 'main/index.html', {
-        'employees': employees,
-    })
+    return render(request, 'main/index.html',)
 
 
+# недвижимость
 def property(request):
     property = Property.objects.filter(ifSelled=False)
     return render(request, 'main/property.html', {
@@ -24,6 +22,7 @@ def property(request):
     })
 
 
+# для продавцов\покупателей
 def user_forms(request):
     error1 = ''
     error2 = ''
@@ -61,6 +60,7 @@ def user_forms(request):
     return render(request, 'main/user_forms.html', context)
 
 
+# поиск квартир
 def requests(request):
     submitbutton = request.POST.get("submit")
 
@@ -117,7 +117,7 @@ class EmployeesViewSet(viewsets.ModelViewSet):
 
 
 class MyprojectLoginView(LoginView):
-    template_name = 'stuff/login.html'
+    template_name = 'staff/login.html'
     form_class = AuthUserForm
     success_url = reverse_lazy('tables')
 
@@ -130,13 +130,14 @@ class MyProjectLogout(LogoutView):
     next_page = reverse_lazy('home')
 
 
+# таблицы
 def tables(request):
     property = Property.objects.all()
     client_sell = ClientSell.objects.all()
     client_buy = ClientBuy.objects.all()
-    selled_prop = SelledProperty.objects.all()
+    selled_prop = SelledProperty.objects.prefetch_related('applicationCode__seller__property_set')
 
-    return render(request, 'stuff/tables.html', {
+    return render(request, 'staff/tables.html', {
         'property': property,
         'client_sell': client_sell,
         'client_buy': client_buy,
@@ -144,7 +145,8 @@ def tables(request):
     })
 
 
-def stuff_deals(request):
+# сделки
+def staff_deals(request):
     selled_prop = SelledProperty.objects.all()
     error = ''
     if request.method == 'POST':
@@ -161,25 +163,49 @@ def stuff_deals(request):
         'selled_prop': selled_prop,
     }
 
-    return render(request, 'stuff/stuff_deals.html', context)
+    return render(request, 'staff/staff_deals.html', context)
 
 
+# для кнопки удалить
 def delete(request, pk):
     get_selled_prop = SelledProperty.objects.get(pk=pk)
     get_selled_prop.delete()
 
-    return redirect(reverse('stuff'))
+    return redirect(reverse('staff'))
 
 
+# для кнопки обновить
 class MyUpdateView(UpdateView):
     model = SelledProperty
-    template_name = 'stuff/stuff_deals.html'
+    template_name = 'staff/staff_deals.html'
     form_class = SelledPropForm
-    success_url = reverse_lazy('stuff_deals')
-    #success_message = 'Запись успешно обновлена'
+    success_url = reverse_lazy('staff_deals')
+    success_message = 'Запись успешно обновлена'
     def get_context_data(self,**kwargs):
         kwargs['update'] = True
         return super().get_context_data(**kwargs)
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         return kwargs
+
+
+# для кнопки резервного копирования
+def backup(request, pk):
+    backupqs = SelledProperty.objects.prefetch_related('applicationCode__seller__property_set').get(pk=pk)
+    b = DealsBackup(contractCode = backupqs.contractCode,
+                    applicationCode = backupqs.applicationCode,
+                    dateOfOrder=backupqs.applicationCode.dateOfOrder,
+                    dateOfOperation=backupqs.dateOfOperation,
+                    employee=backupqs.employee,
+                    buyer=backupqs.buyer,
+                    seller=backupqs.applicationCode.seller,
+                    price=backupqs.applicationCode.price,
+                    profit=backupqs.profit,
+                    )
+    b.save()
+    return redirect(reverse('staff_deals'))
+
+
+
+
+

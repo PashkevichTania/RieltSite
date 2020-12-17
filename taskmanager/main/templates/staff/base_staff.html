@@ -25,9 +25,9 @@
                        href="{{ url_tables }}">Таблицы</a>
                 </li>
                 <li class="nav-item">
-                    {% url 'stuff_deals' as url_stuff_deals %}
-                    <a class="nav-link btn-info {% if url_stuff_deals == request.path %}active{% endif %} mr-3"
-                       href="{{ url_stuff_deals }}">Сделки</a>
+                    {% url 'staff_deals' as url_staff_deals %}
+                    <a class="nav-link btn-info {% if url_staff_deals == request.path %}active{% endif %} mr-3"
+                       href="{{ url_staff_deals }}">Сделки</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link active mr-3" href='admin'>Админ панель</a>
@@ -41,10 +41,18 @@
     </nav>
 </div>
 <div class="container">
-
     {% if request.user.is_authenticated %}
-        {% block content %}
-        {% endblock %}
+        {% if request.user.is_staff %}
+            {% block content %}
+            {% endblock %}
+        {% else %}
+            <h1 class="text-center mt-5">У вас нет прав доступа к этой странице</h1>
+            <p class="text-center mt-1">Пожалуйста, авторизируйтесь как персонал</p>
+            <p class="text-center mt-1">Сейчас вы авторизованы как: <span class="font-weight-bold">{{ user.get_username }}</span></p>
+        <div class="container d-flex justify-content-center mt-5">
+            <a href="login" class="btn btn-lg btn-primary">Авторизоваться</a>
+        </div>
+        {% endif %}
     {% else %}
         <h1 class="text-center mt-5">Для работы с этой страницей необходима авторизация</h1>
         <div class="container d-flex justify-content-center mt-5">
