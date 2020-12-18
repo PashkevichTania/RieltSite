@@ -40,11 +40,20 @@
         </div>
     </nav>
 </div>
+
+{% if messages %}
+    <div class="alert alert-success text-center">
+        {% for m in messages %}
+            {{ m }}
+        {% endfor %}
+    </div>
+{% endif %}
+
 <div class="container">
+
     {% if request.user.is_authenticated %}
         {% if request.user.is_staff %}
-            {% block content %}
-            {% endblock %}
+            {% block content %}{% endblock %}
         {% else %}
             <h1 class="text-center mt-5">У вас нет прав доступа к этой странице</h1>
             <p class="text-center mt-1">Пожалуйста, авторизируйтесь как персонал</p>

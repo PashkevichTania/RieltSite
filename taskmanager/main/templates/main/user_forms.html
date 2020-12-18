@@ -9,49 +9,49 @@ User forms
     <div class="container" id="empty">
         <b-tabs content-class="mt-3">
             <b-tab title="Добавить покупателя" active>
-                <form method="post">
+                <form method="post" id="buyer">
                     {% csrf_token %}
-                    {{ form1.FIO }}<br>
-                    {{ form1.address}}<br>
-                    {{ form1.tel}}<br>
-                    {{ form1.passportCode}}
+                    {{ form_buy.FIO }}<br>
+                    {{ form_buy.address}}<br>
+                    {{ form_buy.tel}}<br>
+                    {{ form_buy.passportCode}}
                     <span class="help-block ml-3 text-muted">2 буквы и 7 цифр</span><br><br>
-                    {{ form1.passportNumber}}
+                    {{ form_buy.passportNumber}}
                     <span class="help-block ml-3 text-muted">14 символов</span>
                     <br>
-                    <button type="submit" class="btn btn-success mt-5">Добавить</button>
-                <span>{{ error }}</span>
+                    <button type="submit" form="buyer" class="btn btn-success mt-5">Добавить</button>
+                <span>{{ error_buy }}</span>
                 </form>
             </b-tab>
             <b-tab title="Добавить продавца">
-                <form method="post">
+                <form method="post" id="seller">
                     {% csrf_token %}
-                    {{ form2.FIO }}<br>
-                    {{ form2.address}}<br>
-                    {{ form2.tel}}<br>
-                    {{ form2.passportCode}}
+                    {{ form_sell.FIO }}<br>
+                    {{ form_sell.address}}<br>
+                    {{ form_sell.tel}}<br>
+                    {{ form_sell.passportCode}}
                     <span class="help-block ml-3 text-muted">2 буквы и 7 цифр</span><br><br>
-                    {{ form2.passportNumber}}
+                    {{ form_sell.passportNumber}}
                     <span class="help-block ml-3 text-muted">14 символов</span>
                     <br>
-                    <button type="submit" class="btn btn-success mt-5">Добавить</button>
-                <span>{{ error }}</span>
+                    <button type="submit" form="seller" class="btn btn-success mt-5">Добавить</button>
+                <span>{{ error_sell }}</span>
                 </form>
             </b-tab>
             <b-tab title="Добавить недвижимость">
-                <form method="post">
+                <form method="post" id="prop">
                     {% csrf_token %}
-                    {{ form3.dateOfOrder }}<br>
-                    {{ form3.name}}<br>
-                    {{ form3.area}}<br>
-                    {{ form3.rooms}}<br>
-                    {{ form3.address}}<br>
-                    {{ form3.price}}<br>
-                    {{ form3.seller}}
+                    {{ form_prop.dateOfOrder }}<br>
+                    {{ form_prop.name}}<br>
+                    {{ form_prop.area}}<br>
+                    {{ form_prop.rooms}}<br>
+                    {{ form_prop.address}}<br>
+                    {{ form_prop.price}}<br>
+                    {{ form_prop.seller}}
                     <span class="help-block ml-3 text-muted">Выберите продавца</span>
                     <br>
-                    <button type="submit" class="btn btn-success mt-5">Добавить</button>
-                <span>{{ error }}</span>
+                    <button type="submit" form="prop" class="btn btn-success mt-5">Добавить</button>
+                <span>{{ error_prop }}</span>
                 </form>
             </b-tab>
         </b-tabs>

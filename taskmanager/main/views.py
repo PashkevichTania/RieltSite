@@ -1,12 +1,14 @@
+from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
-from django.views.generic import UpdateView, CreateView
+from django.views.generic import UpdateView, DeleteView, CreateView
 from .models import Employees, ClientBuy, ClientSell, Property, SelledProperty, DealsBackup
 from rest_framework import viewsets
 from .serializers import EmployeesSerializer
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.models import User
 from .forms import SellForm, BuyForm, PropForm, FindAddress, FindRooms, FindArea, FindPrice, AuthUserForm, SelledPropForm
+from django.contrib.messages.views import SuccessMessageMixin
 
 
 # главная страница
@@ -24,38 +26,38 @@ def property(request):
 
 # для продавцов\покупателей
 def user_forms(request):
-    error1 = ''
-    error2 = ''
-    error3 = ''
+    error_buy = ''
+    error_sell = ''
+    error_prop = ''
     if request.method == 'POST':
-        form1 = BuyForm(request.POST)
-        form2 = SellForm(request.POST)
-        form3 = PropForm(request.POST)
-        if form1.is_valid():
-            form1.save()
-            return redirect('home')
+        form_buy = BuyForm(request.POST)
+        form_sell = SellForm(request.POST)
+        form_prop = PropForm(request.POST)
+        if form_buy.is_valid():
+            form_buy.save()
+            messages.success(request, "Успешно")
         else:
-            error1 = 'Форма была неверной'
-        if form2.is_valid():
-            form2.save()
-            return redirect('home')
+            error_buy = 'Форма была неверной'
+        if form_sell.is_valid():
+            form_sell.save()
+            messages.success(request, "Успешно")
         else:
-            error2 = 'Форма была неверной'
-        if form3.is_valid():
-            form3.save()
-            return redirect('home')
+            error_sell = 'Форма была неверной'
+        if form_prop.is_valid():
+            form_prop.save()
+            messages.success(request, "Недвижимость добавлена")
         else:
-            error3 = 'Форма была неверной'
-    form1 = BuyForm()
-    form2 = SellForm()
-    form3 = PropForm()
+            error_prop = 'Форма была неверной'
+    form_buy = BuyForm()
+    form_sell = SellForm()
+    form_prop = PropForm()
     context = {
-        'form1': form1,
-        'error1': error1,
-        'form2': form2,
-        'error2': error2,
-        'form3': form3,
-        'error3': error3,
+        'form_buy': form_buy,
+        'error_buy': error_buy,
+        'form_sell': form_sell,
+        'error_sell': error_sell,
+        'form_prop': form_prop,
+        'error_prop': error_prop,
     }
     return render(request, 'main/user_forms.html', context)
 
@@ -153,6 +155,7 @@ def staff_deals(request):
         form = SelledPropForm(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, "Сделка добавлена")
         else:
             error = 'Форма была неверной'
 
@@ -171,11 +174,11 @@ def delete(request, pk):
     get_selled_prop = SelledProperty.objects.get(pk=pk)
     get_selled_prop.delete()
 
-    return redirect(reverse('staff'))
+    return redirect(reverse('staff_deals'))
 
 
 # для кнопки обновить
-class MyUpdateView(UpdateView):
+class MyUpdateView(SuccessMessageMixin, UpdateView):
     model = SelledProperty
     template_name = 'staff/staff_deals.html'
     form_class = SelledPropForm
